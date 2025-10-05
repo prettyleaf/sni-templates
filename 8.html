@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHANGEMEPLS Bank</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+        }
+
+        body.light {
+            background: #FFFFFF;
+            color: #000000;
+        }
+
+        body.dark {
+            background: #000000;
+            color: #FFFFFF;
+        }
+
+        /* Dot Matrix Pattern Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, rgba(128, 128, 128, 0.1) 1px, transparent 1px);
+            background-size: 24px 24px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* Glyph Interface Elements */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            border: 1px solid currentColor;
+            border-radius: 50%;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Background structures */
+        .bg-structures {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .orbit-ring {
+            position: absolute;
+            border: 1px solid;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        body.light .orbit-ring {
+            border-color: rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark .orbit-ring {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .orbit-1 {
+            width: 500px;
+            height: 500px;
+            top: 20%;
+            left: -100px;
+            animation: rotate-orbit 60s linear infinite;
+        }
+
+        .orbit-2 {
+            width: 400px;
+            height: 400px;
+            bottom: 10%;
+            right: -80px;
+            animation: rotate-orbit 50s linear infinite reverse;
+        }
+
+        @keyframes rotate-orbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Main container */
+        .app-container {
+            max-width: 420px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            padding: 24px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid;
+            position: relative;
+        }
+
+        body.light .header {
+            border-bottom-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark .header {
+            border-bottom-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .red-accent {
+            color: #FF3B30;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        body.light .icon-btn {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .icon-btn {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .icon-btn:hover {
+            border-color: #FF3B30;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 6px;
+            height: 6px;
+            background: #FF3B30;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.3);
+            }
+        }
+
+        /* Balance Card */
+        .balance-card {
+            margin: 24px 20px;
+            padding: 32px 24px;
+            border: 1px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.light .balance-card {
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.dark .balance-card {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .balance-label {
+            font-size: 12px;
+            opacity: 0.5;
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .balance-amount {
+            font-size: 42px;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .balance-change {
+            font-size: 13px;
+            opacity: 0.6;
+        }
+
+        .balance-change.positive {
+            color: #34C759;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            margin: 0 20px 32px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .action-btn {
+            padding: 20px 16px;
+            border: 1px solid;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        body.light .action-btn {
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.dark .action-btn {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .action-btn:hover {
+            border-color: #FF3B30;
+            transform: translateY(-2px);
+        }
+
+        .action-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .action-label {
+            font-size: 11px;
+            letter-spacing: 0.02em;
+        }
+
+        /* Cards Section */
+        .section {
+            margin: 32px 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .view-all {
+            font-size: 12px;
+            opacity: 0.5;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .view-all:hover {
+            opacity: 1;
+            color: #FF3B30;
+        }
+
+        .card-item {
+            padding: 24px;
+            border: 1px solid;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        body.light .card-item {
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.dark .card-item {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .card-item:hover {
+            border-color: #FF3B30;
+        }
+
+        .card-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            border: 1px solid #FF3B30;
+            border-radius: 50%;
+            opacity: 0.2;
+            transform: translate(30%, -30%);
+        }
+
+        .card-number {
+            font-size: 14px;
+            margin-bottom: 12px;
+            letter-spacing: 0.05em;
+        }
+
+        .card-balance {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .card-type {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            font-size: 10px;
+            opacity: 0.4;
+            letter-spacing: 0.05em;
+        }
+
+        /* Transactions */
+        .transaction-item {
+            padding: 16px 0;
+            border-bottom: 1px solid;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+
+        body.light .transaction-item {
+            border-bottom-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark .transaction-item {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .transaction-item:hover {
+            opacity: 0.7;
+        }
+
+        .transaction-info {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border: 1px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        body.light .transaction-icon {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .transaction-icon {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .transaction-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .transaction-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .transaction-date {
+            font-size: 11px;
+            opacity: 0.5;
+        }
+
+        .transaction-amount {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .transaction-amount.positive {
+            color: #34C759;
+        }
+
+        .transaction-amount.negative {
+            opacity: 0.8;
+        }
+
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .stat-item {
+            padding: 20px;
+            border: 1px solid;
+        }
+
+        body.light .stat-item {
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.dark .stat-item {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            opacity: 0.5;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 420px;
+            padding: 16px 20px;
+            border-top: 1px solid;
+            display: flex;
+            justify-content: space-around;
+            z-index: 10;
+        }
+
+        body.light .bottom-nav {
+            background: rgba(255, 255, 255, 0.95);
+            border-top-color: rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(20px);
+        }
+
+        body.dark .bottom-nav {
+            background: rgba(0, 0, 0, 0.95);
+            border-top-color: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            opacity: 0.4;
+        }
+
+        .nav-item.active {
+            opacity: 1;
+        }
+
+        .nav-item:hover {
+            opacity: 1;
+        }
+
+        .nav-item.active .nav-icon {
+            color: #FF3B30;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            letter-spacing: 0.02em;
+        }
+
+        /* Loading animation */
+        .loading-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: #FF3B30;
+            width: 100%;
+            animation: loadingPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes loadingPulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scaleX(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+        }
+
+        /* Spacer for bottom nav */
+        .bottom-spacer {
+            height: 80px;
+        }
+
+        /* Page containers */
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Made with link */
+        .made-with {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            opacity: 0.6;
+            margin-top: 20px;
+        }
+
+        .made-with a {
+            color: inherit;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .made-with a:hover {
+            opacity: 1;
+        }
+
+        /* Analytics Page Styles */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .analytics-card {
+            padding: 20px;
+            border: 1px solid;
+            background: transparent;
+        }
+
+        body.light .analytics-card {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .analytics-card {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .analytics-card-title {
+            font-size: 12px;
+            opacity: 0.6;
+            margin-bottom: 8px;
+        }
+
+        .analytics-card-value {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .analytics-card-change {
+            font-size: 11px;
+        }
+
+        .analytics-card-change.positive {
+            color: #34C759;
+        }
+
+        .analytics-card-change.negative {
+            color: #FF3B30;
+        }
+
+        /* Cards Page Styles */
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .card-item {
+            padding: 24px;
+            border: 1px solid;
+            background: transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.light .card-item {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .card-item {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .card-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-type {
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        .card-status {
+            font-size: 11px;
+            padding: 4px 8px;
+            border: 1px solid #34C759;
+            color: #34C759;
+        }
+
+        .card-number {
+            font-size: 16px;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+
+        .card-item-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card-info-item {
+            font-size: 11px;
+        }
+
+        .card-info-label {
+            opacity: 0.6;
+            margin-bottom: 4px;
+        }
+
+        .card-info-value {
+            font-weight: 600;
+        }
+
+        /* Profile Page Styles */
+        .profile-header {
+            text-align: center;
+            padding: 32px 0;
+            border-bottom: 1px solid;
+            margin-bottom: 24px;
+        }
+
+        body.light .profile-header {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .profile-header {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: #FF3B30;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .profile-email {
+            font-size: 13px;
+            opacity: 0.6;
+        }
+
+        .profile-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .profile-menu-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        body.light .profile-menu-item {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .profile-menu-item {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-menu-item:hover {
+            background: rgba(255, 59, 48, 0.05);
+        }
+
+        .profile-menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .profile-menu-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body class="dark">
+    <!-- Background structures -->
+    <div class="bg-structures">
+        <div class="orbit-ring orbit-1"></div>
+        <div class="orbit-ring orbit-2"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <a href="https://github.com/TeamDominant/sni-templates" target="_blank" style="color: inherit; text-decoration: none;"><div class="logo">CHANGEMEPLS<span class="red-accent">.</span>Bank</div></a>
+            <div class="header-icons">
+                <button class="icon-btn">
+                    <span>🔍</span>
+                </button>
+                <button class="icon-btn">
+                    <span>🔔</span>
+                    <div class="notification-dot"></div>
+                </button>
+                <button class="icon-btn">
+                    <span>⚙️</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Home Page -->
+        <div class="page active" id="homePage">
+            <!-- Balance Card -->
+            <div class="balance-card">
+            <div class="balance-label">Total Balance</div>
+            <div class="balance-amount">$24,582.50</div>
+            <div class="balance-change positive">+$1,240.00 (5.3%) this month</div>
+            <div class="loading-indicator"></div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="action-btn">
+                <div class="action-icon">↗</div>
+                <div class="action-label">Send</div>
+            </button>
+            <button class="action-btn">
+                <div class="action-icon">↙</div>
+                <div class="action-label">Request</div>
+            </button>
+            <button class="action-btn">
+                <div class="action-icon">+</div>
+                <div class="action-label">Top Up</div>
+            </button>
+        </div>
+
+        <!-- Cards Section -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">My Cards</div>
+                <div class="view-all">View All →</div>
+            </div>
+            
+            <div class="card-item">
+                <div class="card-type">DEBIT</div>
+                <div class="card-number">•••• 4892</div>
+                <div class="card-balance">$18,420.00</div>
+            </div>
+
+            <div class="card-item">
+                <div class="card-type">CREDIT</div>
+                <div class="card-number">•••• 7634</div>
+                <div class="card-balance">$6,162.50</div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">This Month</div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Income</div>
+                    <div class="stat-value">$8,240</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Expenses</div>
+                    <div class="stat-value">$5,830</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Savings</div>
+                    <div class="stat-value">$2,410</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Investments</div>
+                    <div class="stat-value">$14,200</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">Recent Transactions</div>
+                <div class="view-all">View All →</div>
+            </div>
+
+            <div class="transaction-item">
+                <div class="transaction-info">
+                    <div class="transaction-icon">🛒</div>
+                    <div class="transaction-details">
+                        <div class="transaction-name">Amazon Purchase</div>
+                        <div class="transaction-date">Today, 14:32</div>
+                    </div>
+                </div>
+                <div class="transaction-amount negative">-$89.99</div>
+            </div>
+
+            <div class="transaction-item">
+                <div class="transaction-info">
+                    <div class="transaction-icon">💰</div>
+                    <div class="transaction-details">
+                        <div class="transaction-name">Salary Deposit</div>
+                        <div class="transaction-date">Oct 1, 09:00</div>
+                    </div>
+                </div>
+                <div class="transaction-amount positive">+$5,200.00</div>
+            </div>
+
+            <div class="transaction-item">
+                <div class="transaction-info">
+                    <div class="transaction-icon">☕</div>
+                    <div class="transaction-details">
+                        <div class="transaction-name">Starbucks</div>
+                        <div class="transaction-date">Yesterday, 08:15</div>
+                    </div>
+                </div>
+                <div class="transaction-amount negative">-$6.50</div>
+            </div>
+
+            <div class="transaction-item">
+                <div class="transaction-info">
+                    <div class="transaction-icon">🎵</div>
+                    <div class="transaction-details">
+                        <div class="transaction-name">Spotify Premium</div>
+                        <div class="transaction-date">Oct 3, 12:00</div>
+                    </div>
+                </div>
+                <div class="transaction-amount negative">-$9.99</div>
+            </div>
+
+            <div class="transaction-item">
+                <div class="transaction-info">
+                    <div class="transaction-icon">🏠</div>
+                    <div class="transaction-details">
+                        <div class="transaction-name">Rent Payment</div>
+                        <div class="transaction-date">Oct 1, 10:30</div>
+                    </div>
+                </div>
+                <div class="transaction-amount negative">-$1,500.00</div>
+            </div>
+
+            <div class="transaction-item">
+                <div class="transaction-info">
+                    <div class="transaction-icon">📱</div>
+                    <div class="transaction-details">
+                        <div class="transaction-name">Phone Bill</div>
+                        <div class="transaction-date">Oct 2, 16:45</div>
+                    </div>
+                </div>
+                <div class="transaction-amount negative">-$45.00</div>
+            </div>
+            </div>
+
+            <div class="made-with">
+                <a href="https://github.com/TeamDominant/sni-templates" target="_blank">Made with ❤️</a>
+            </div>
+
+            <div class="bottom-spacer"></div>
+        </div>
+
+        <!-- Analytics Page -->
+        <div class="page" id="analyticsPage">
+            <div class="page-title">Analytics</div>
+            
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <div class="analytics-card-title">Total Income</div>
+                    <div class="analytics-card-value">$12,450</div>
+                    <div class="analytics-card-change positive">+15.3% vs last month</div>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="analytics-card-title">Total Expenses</div>
+                    <div class="analytics-card-value">$8,210</div>
+                    <div class="analytics-card-change negative">+8.2% vs last month</div>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="analytics-card-title">Savings Rate</div>
+                    <div class="analytics-card-value">34%</div>
+                    <div class="analytics-card-change positive">+2.1% vs last month</div>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="analytics-card-title">Investments</div>
+                    <div class="analytics-card-value">$14,200</div>
+                    <div class="analytics-card-change positive">+12.8% vs last month</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">Spending by Category</div>
+                </div>
+                
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">🏠</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">Housing</div>
+                            <div class="transaction-date">$1,850 this month</div>
+                        </div>
+                    </div>
+                    <div class="transaction-amount">22%</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">🛒</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">Shopping</div>
+                            <div class="transaction-date">$1,240 this month</div>
+                        </div>
+                    </div>
+                    <div class="transaction-amount">15%</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">🍕</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">Food & Dining</div>
+                            <div class="transaction-date">$890 this month</div>
+                        </div>
+                    </div>
+                    <div class="transaction-amount">11%</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">🚗</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">Transportation</div>
+                            <div class="transaction-date">$520 this month</div>
+                        </div>
+                    </div>
+                    <div class="transaction-amount">6%</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">🎮</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">Entertainment</div>
+                            <div class="transaction-date">$380 this month</div>
+                        </div>
+                    </div>
+                    <div class="transaction-amount">5%</div>
+                </div>
+            </div>
+
+            <div class="made-with">
+                <a href="https://github.com/TeamDominant/sni-templates" target="_blank">Made with ❤️</a>
+            </div>
+
+            <div class="bottom-spacer"></div>
+        </div>
+
+        <!-- Cards Page -->
+        <div class="page" id="cardsPage">
+            <div class="page-title">My Cards</div>
+            
+            <div class="cards-list">
+                <div class="card-item">
+                    <div class="card-item-header">
+                        <div class="card-type">Debit Card</div>
+                        <div class="card-status">Active</div>
+                    </div>
+                    <div class="card-number">•••• •••• •••• 4829</div>
+                    <div class="card-item-footer">
+                        <div class="card-info-item">
+                            <div class="card-info-label">Balance</div>
+                            <div class="card-info-value">$5,830.00</div>
+                        </div>
+                        <div class="card-info-item">
+                            <div class="card-info-label">Expires</div>
+                            <div class="card-info-value">12/26</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-item">
+                    <div class="card-item-header">
+                        <div class="card-type">Credit Card</div>
+                        <div class="card-status">Active</div>
+                    </div>
+                    <div class="card-number">•••• •••• •••• 7653</div>
+                    <div class="card-item-footer">
+                        <div class="card-info-item">
+                            <div class="card-info-label">Available</div>
+                            <div class="card-info-value">$8,200.00</div>
+                        </div>
+                        <div class="card-info-item">
+                            <div class="card-info-label">Expires</div>
+                            <div class="card-info-value">09/27</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-item">
+                    <div class="card-item-header">
+                        <div class="card-type">Savings Card</div>
+                        <div class="card-status">Active</div>
+                    </div>
+                    <div class="card-number">•••• •••• •••• 2104</div>
+                    <div class="card-item-footer">
+                        <div class="card-info-item">
+                            <div class="card-info-label">Balance</div>
+                            <div class="card-info-value">$2,410.00</div>
+                        </div>
+                        <div class="card-info-item">
+                            <div class="card-info-label">Interest</div>
+                            <div class="card-info-value">2.5% APY</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="action-btn" style="width: 100%; margin-top: 16px;">
+                    <div class="action-icon">+</div>
+                    <div class="action-label">Add New Card</div>
+                </button>
+            </div>
+
+            <div class="made-with">
+                <a href="https://github.com/TeamDominant/sni-templates" target="_blank">Made with ❤️</a>
+            </div>
+
+            <div class="bottom-spacer"></div>
+        </div>
+
+        <!-- Profile Page -->
+        <div class="page" id="profilePage">
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <div class="profile-name">John Doe</div>
+                <div class="profile-email">john.doe@example.com</div>
+            </div>
+
+            <div class="profile-menu">
+                <div class="profile-menu-item">
+                    <div class="profile-menu-label">
+                        <span>👤</span>
+                        <span>Personal Information</span>
+                    </div>
+                    <span>→</span>
+                </div>
+
+                <div class="profile-menu-item">
+                    <div class="profile-menu-label">
+                        <span>🔒</span>
+                        <span>Security & Privacy</span>
+                    </div>
+                    <span>→</span>
+                </div>
+
+                <div class="profile-menu-item">
+                    <div class="profile-menu-label">
+                        <span>🔔</span>
+                        <span>Notifications</span>
+                    </div>
+                    <span>→</span>
+                </div>
+
+                <div class="profile-menu-item">
+                    <div class="profile-menu-label">
+                        <span>💳</span>
+                        <span>Payment Methods</span>
+                    </div>
+                    <span>→</span>
+                </div>
+
+                <div class="profile-menu-item">
+                    <div class="profile-menu-label">
+                        <span>📊</span>
+                        <span>Statements & Reports</span>
+                    </div>
+                    <span>→</span>
+                </div>
+
+                <div class="profile-menu-item">
+                    <div class="profile-menu-label">
+                        <span>❓</span>
+                        <span>Help & Support</span>
+                    </div>
+                    <span>→</span>
+                </div>
+
+                <div class="profile-menu-item">
+                    <div class="profile-menu-label">
+                        <span>⚙️</span>
+                        <span>Settings</span>
+                    </div>
+                    <span>→</span>
+                </div>
+
+                <div class="profile-menu-item" style="color: #FF3B30;">
+                    <div class="profile-menu-label">
+                        <span>🚪</span>
+                        <span>Log Out</span>
+                    </div>
+                    <span>→</span>
+                </div>
+            </div>
+
+            <div class="made-with">
+                <a href="https://github.com/TeamDominant/sni-templates" target="_blank">Made with ❤️</a>
+            </div>
+
+            <div class="bottom-spacer"></div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active" data-page="homePage">
+            <div class="nav-icon">⌂</div>
+            <div class="nav-label">Home</div>
+        </div>
+        <div class="nav-item" data-page="analyticsPage">
+            <div class="nav-icon">📊</div>
+            <div class="nav-label">Analytics</div>
+        </div>
+        <div class="nav-item" data-page="cardsPage">
+            <div class="nav-icon">💳</div>
+            <div class="nav-label">Cards</div>
+        </div>
+        <div class="nav-item" data-page="profilePage">
+            <div class="nav-icon">👤</div>
+            <div class="nav-label">Profile</div>
+        </div>
+    </div>
+
+    <script>
+        // Theme detection
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.classList.remove('light');
+            document.body.classList.add('dark');
+        } else {
+            document.body.classList.remove('dark');
+            document.body.classList.add('light');
+        }
+
+        // Page navigation with smooth transitions
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Update active nav item
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Get target page
+                const targetPage = this.getAttribute('data-page');
+                
+                // Hide all pages
+                document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                
+                // Show target page with animation
+                const pageToShow = document.getElementById(targetPage);
+                if (pageToShow) {
+                    pageToShow.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
