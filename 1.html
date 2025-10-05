@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHANGEMEPLS Community Forum</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+        }
+
+        body.light {
+            background: #FFFFFF;
+            color: #000000;
+        }
+
+        body.dark {
+            background: #000000;
+            color: #FFFFFF;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, rgba(128, 128, 128, 0.1) 1px, transparent 1px);
+            background-size: 24px 24px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .bg-structures {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .orbit-ring {
+            position: absolute;
+            border: 1px solid;
+            border-radius: 50%;
+            opacity: 0.15;
+        }
+
+        body.light .orbit-ring {
+            border-color: rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark .orbit-ring {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .orbit-1 {
+            width: 400px;
+            height: 400px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: rotate-orbit 40s linear infinite;
+        }
+
+        .orbit-2 {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: rotate-orbit 30s linear infinite reverse;
+        }
+
+        .orbit-3 {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: rotate-orbit 25s linear infinite;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+
+        body.light .particle {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        body.dark .particle {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .particle-1 {
+            top: 20%;
+            left: 15%;
+            animation: float-particle 15s ease-in-out infinite;
+        }
+
+        .particle-2 {
+            top: 70%;
+            right: 20%;
+            animation: float-particle 18s ease-in-out infinite 2s;
+        }
+
+        .particle-3 {
+            bottom: 25%;
+            left: 25%;
+            animation: float-particle 20s ease-in-out infinite 4s;
+        }
+
+        .particle-4 {
+            top: 40%;
+            right: 10%;
+            animation: float-particle 16s ease-in-out infinite 1s;
+        }
+
+        .particle-5 {
+            top: 15%;
+            right: 30%;
+            animation: float-particle 22s ease-in-out infinite 3s;
+        }
+
+        .particle-red {
+            background: #FF3B30 !important;
+            opacity: 0.5;
+            animation: pulse-particle 3s ease-in-out infinite;
+        }
+
+        .particle-red-1 {
+            top: 30%;
+            left: 20%;
+        }
+
+        .particle-red-2 {
+            bottom: 30%;
+            right: 25%;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes rotate-orbit {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes float-particle {
+            0%, 100% {
+                transform: translate(0, 0);
+                opacity: 0.4;
+            }
+            25% {
+                transform: translate(30px, -30px);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translate(-20px, 40px);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translate(40px, 20px);
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes pulse-particle {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.8;
+            }
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            border: 1px solid;
+            padding: 24px 32px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        body.light .header {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .header {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .red-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #FF3B30;
+            border-radius: 50%;
+            margin-left: 8px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.2);
+            }
+        }
+
+        .nav {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: inherit;
+            font-size: 14px;
+            font-weight: 400;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .nav a:hover {
+            opacity: 1;
+        }
+
+        .nav a.active {
+            opacity: 1;
+            position: relative;
+        }
+
+        .nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #FF3B30;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .search-box {
+            padding: 10px 16px;
+            border: 1px solid;
+            background: transparent;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: inherit;
+            outline: none;
+            min-width: 200px;
+        }
+
+        body.light .search-box {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .search-box {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn {
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            color: #FFFFFF;
+            background: #FF3B30;
+            border: none;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: -0.01em;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 59, 48, 0.3);
+        }
+
+        .stats-bar {
+            border: 1px solid;
+            padding: 20px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        body.light .stats-bar {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .stats-bar {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .categories {
+            margin-bottom: 24px;
+        }
+
+        .category-card {
+            border: 1px solid;
+            padding: 24px 32px;
+            margin-bottom: 16px;
+            position: relative;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        body.light .category-card {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .category-card {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .category-card:hover {
+            transform: translateX(8px);
+        }
+
+        body.light .category-card:hover {
+            border-color: rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark .category-card:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .category-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .category-desc {
+            font-size: 13px;
+            opacity: 0.6;
+            line-height: 1.6;
+        }
+
+        .category-meta {
+            display: flex;
+            gap: 24px;
+            font-size: 12px;
+            opacity: 0.6;
+            margin-top: 16px;
+        }
+
+        .category-indicator {
+            width: 4px;
+            height: 4px;
+            background: #FF3B30;
+            border-radius: 50%;
+            position: absolute;
+            top: 28px;
+            right: 32px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+            opacity: 0.8;
+        }
+
+        .thread-list {
+            margin-bottom: 40px;
+        }
+
+        .thread-item {
+            border: 1px solid;
+            padding: 20px 32px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        body.light .thread-item {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .thread-item {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .thread-item:hover {
+            transform: translateX(8px);
+        }
+
+        body.light .thread-item:hover {
+            border-color: rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark .thread-item:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .thread-content {
+            flex: 1;
+        }
+
+        .thread-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .thread-title {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .thread-tag {
+            font-size: 10px;
+            padding: 4px 8px;
+            border: 1px solid #FF3B30;
+            color: #FF3B30;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .thread-meta {
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        .thread-stats {
+            display: flex;
+            gap: 24px;
+            font-size: 12px;
+        }
+
+        .thread-stat {
+            text-align: center;
+        }
+
+        .thread-stat-value {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .thread-stat-label {
+            opacity: 0.6;
+            font-size: 11px;
+        }
+
+        .footer {
+            border: 1px solid;
+            padding: 24px 32px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        body.light .footer {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .footer {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .footer-text {
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav {
+                width: 100%;
+            }
+
+            .user-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .thread-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .thread-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+        }
+    </style>
+</head>
+<body class="dark">
+    <div class="bg-structures">
+        <div class="orbit-ring orbit-1"></div>
+        <div class="orbit-ring orbit-2"></div>
+        <div class="orbit-ring orbit-3"></div>
+        
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        <div class="particle particle-4"></div>
+        <div class="particle particle-5"></div>
+        
+        <div class="particle particle-red particle-red-1"></div>
+        <div class="particle particle-red particle-red-2"></div>
+    </div>
+
+    <div class="main-wrapper">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="https://github.com/TeamDominant/sni-templates" target="_blank" style="color: inherit; text-decoration: none;">CHANGEMEPLS Community<span class="red-dot"></span></a>
+                </div>
+                <nav class="nav">
+                    <a href="https://github.com/TeamDominant/sni-templates" target="_blank" class="active">Forum</a>
+                    <a href="https://github.com/TeamDominant/sni-templates" target="_blank">Discussions</a>
+                    <a href="https://github.com/TeamDominant/sni-templates" target="_blank">GitHub</a>
+                    <a href="https://github.com/TeamDominant/sni-templates" target="_blank">Support</a>
+                    <a href="https://github.com/TeamDominant/sni-templates" target="_blank">About</a>
+                </nav>
+                <div class="user-actions">
+                    <input type="text" class="search-box" placeholder="Search threads...">
+                    <button class="btn">New Thread</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-value">12.5K</div>
+                <div class="stat-label">Members</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">48.2K</div>
+                <div class="stat-label">Threads</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">324K</div>
+                <div class="stat-label">Messages</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">1.2K</div>
+                <div class="stat-label">Online Now</div>
+            </div>
+        </div>
+
+        <section class="categories">
+            <h2 class="section-title">Forum Categories</h2>
+            
+            <div class="category-card">
+                <div class="category-indicator"></div>
+                <div class="category-header">
+                    <div>
+                        <div class="category-title">AMD Ryzen Discussion</div>
+                        <div class="category-desc">Ryzen 9000 series, Threadripper PRO, X3D processors, and Zen 5 architecture</div>
+                    </div>
+                </div>
+                <div class="category-meta">
+                    <span>15.2K Threads</span>
+                    <span>128K Messages</span>
+                    <span>Last: 2 min ago</span>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-indicator"></div>
+                <div class="category-header">
+                    <div>
+                        <div class="category-title">Radeon Graphics Cards</div>
+                        <div class="category-desc">RX 9000 series, RDNA 4 architecture, FSR 4, and gaming benchmarks</div>
+                    </div>
+                </div>
+                <div class="category-meta">
+                    <span>8.4K Threads</span>
+                    <span>92K Messages</span>
+                    <span>Last: 15 min ago</span>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-indicator"></div>
+                <div class="category-header">
+                    <div>
+                        <div class="category-title">Workstation & Server Hardware</div>
+                        <div class="category-desc">Threadripper builds, EPYC servers, MI300X AI accelerators, and professional workloads</div>
+                    </div>
+                </div>
+                <div class="category-meta">
+                    <span>4.8K Threads</span>
+                    <span>38K Messages</span>
+                    <span>Last: 1 hour ago</span>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-indicator"></div>
+                <div class="category-header">
+                    <div>
+                        <div class="category-title">Build Showcases & Optimization</div>
+                        <div class="category-desc">Custom PC builds, overclocking guides, cooling solutions, and performance tuning</div>
+                    </div>
+                </div>
+                <div class="category-meta">
+                    <span>6.2K Threads</span>
+                    <span>45K Messages</span>
+                    <span>Last: 30 min ago</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="thread-list">
+            <h2 class="section-title">Recent Discussions</h2>
+
+            <div class="thread-item">
+                <div class="thread-content">
+                    <div class="thread-header">
+                        <span class="thread-title">AMD-Intel foundry partnership speculation - What it means</span>
+                        <span class="thread-tag">Hot</span>
+                    </div>
+                    <div class="thread-meta">
+                        <span>Started by silicon_insider • 3 hours ago</span>
+                    </div>
+                </div>
+                <div class="thread-stats">
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">247</div>
+                        <div class="thread-stat-label">Replies</div>
+                    </div>
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">8.4K</div>
+                        <div class="thread-stat-label">Views</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="thread-item">
+                <div class="thread-content">
+                    <div class="thread-header">
+                        <span class="thread-title">Ryzen 9950X3D vs 9900X3D gaming benchmarks - Oct 2025</span>
+                        <span class="thread-tag">Benchmark</span>
+                    </div>
+                    <div class="thread-meta">
+                        <span>Started by fps_hunter • 5 hours ago</span>
+                    </div>
+                </div>
+                <div class="thread-stats">
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">182</div>
+                        <div class="thread-stat-label">Replies</div>
+                    </div>
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">6.2K</div>
+                        <div class="thread-stat-label">Views</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="thread-item">
+                <div class="thread-content">
+                    <div class="thread-header">
+                        <span class="thread-title">Radeon RX 9070 XT RDNA 4 review - First impressions</span>
+                    </div>
+                    <div class="thread-meta">
+                        <span>Started by gpu_enthusiast • 8 hours ago</span>
+                    </div>
+                </div>
+                <div class="thread-stats">
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">156</div>
+                        <div class="thread-stat-label">Replies</div>
+                    </div>
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">5.1K</div>
+                        <div class="thread-stat-label">Views</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="thread-item">
+                <div class="thread-content">
+                    <div class="thread-header">
+                        <span class="thread-title">FSR 4 ML upscaling performance testing & comparison</span>
+                        <span class="thread-tag">Analysis</span>
+                    </div>
+                    <div class="thread-meta">
+                        <span>Started by tech_analyst • 12 hours ago</span>
+                    </div>
+                </div>
+                <div class="thread-stats">
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">329</div>
+                        <div class="thread-stat-label">Replies</div>
+                    </div>
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">12.8K</div>
+                        <div class="thread-stat-label">Views</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="thread-item">
+                <div class="thread-content">
+                    <div class="thread-header">
+                        <span class="thread-title">Threadripper PRO 9000 WX-Series workstation builds</span>
+                    </div>
+                    <div class="thread-meta">
+                        <span>Started by workstation_pro • 1 day ago</span>
+                    </div>
+                </div>
+                <div class="thread-stats">
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">421</div>
+                        <div class="thread-stat-label">Replies</div>
+                    </div>
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">18.5K</div>
+                        <div class="thread-stat-label">Views</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="thread-item">
+                <div class="thread-content">
+                    <div class="thread-header">
+                        <span class="thread-title">RX 9060 XT 16GB - Best value card of 2025?</span>
+                        <span class="thread-tag">Discussion</span>
+                    </div>
+                    <div class="thread-meta">
+                        <span>Started by budget_gamer • 1 day ago</span>
+                    </div>
+                </div>
+                <div class="thread-stats">
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">156</div>
+                        <div class="thread-stat-label">Replies</div>
+                    </div>
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">5.4K</div>
+                        <div class="thread-stat-label">Views</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="thread-item">
+                <div class="thread-content">
+                    <div class="thread-header">
+                        <span class="thread-title">AMD MI300X AI accelerator benchmarks & applications</span>
+                        <span class="thread-tag">AI/ML</span>
+                    </div>
+                    <div class="thread-meta">
+                        <span>Started by ai_researcher • 2 days ago</span>
+                    </div>
+                </div>
+                <div class="thread-stats">
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">892</div>
+                        <div class="thread-stat-label">Replies</div>
+                    </div>
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">24.7K</div>
+                        <div class="thread-stat-label">Views</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="thread-item">
+                <div class="thread-content">
+                    <div class="thread-header">
+                        <span class="thread-title">Zen 5 architecture deep dive - Technical analysis</span>
+                    </div>
+                    <div class="thread-meta">
+                        <span>Started by cpu_architect • 2 days ago</span>
+                    </div>
+                </div>
+                <div class="thread-stats">
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">78</div>
+                        <div class="thread-stat-label">Replies</div>
+                    </div>
+                    <div class="thread-stat">
+                        <div class="thread-stat-value">3.2K</div>
+                        <div class="thread-stat-label">Views</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p class="footer-text"><a href="https://github.com/TeamDominant/sni-templates" target="_blank" style="color: inherit; text-decoration: none;">CHANGEMEPLS Community Forum</a> • Built by the community • 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.classList.add('dark');
+            document.body.classList.remove('light');
+        } else {
+            document.body.classList.add('light');
+            document.body.classList.remove('dark');
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (e.matches) {
+                document.body.classList.add('dark');
+                document.body.classList.remove('light');
+            } else {
+                document.body.classList.add('light');
+                document.body.classList.remove('dark');
+            }
+        });
+    </script>
+</body>
+</html>
